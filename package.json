@@ -1,6 +1,6 @@
 {
   "name": "lazylet",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Lazily evaluated variables for your specs",
   "main": "index.js",
   "directories": {
