@@ -1,7 +1,7 @@
 
-# Let
+# lazylet
 
-Let is a lazy-evaluation system for use in your specs.
+*lazylet* is a lazy-evaluation system for use in your specs.
 
 Variables are defined within an environment object and are lazily computed on
 demand. A variable can hold either a value, function or object. If the variable
@@ -15,7 +15,7 @@ a 'get' accessor in order that their value can be computed on demand.
 
 # Usage
 
-```javascipt
+```javascript
 var Env = require('let').Env;
 
 describe('My test', function(){
@@ -24,17 +24,20 @@ describe('My test', function(){
 
     beforeEach(function() {
         env = new Env();
-        env.Let('number', 1);
-        env.Let('message', function() { return "The value is " + this.number; });
+        env.Let('name', 'James');
+        env.Let('campJsNumber', 3);
+        env.Let('message', function() {
+            return "Welcome, " + this.name + ", from CampJS " + this.campJsNumber;
+        });
     });
 
     it("should produce the expected message", function(){
-        expect(env.message).to.equal("The value is " + 1);
+        expect(env.message).to.equal("Welcome, James, from CampJS 3");
     });
 
     it("should use redefined variables", function(){
-        env.Let('number', function() { return 2; });
-        expect(env.message).to.equal("The value is 2");
+        env.Let('name', function() { return "@freshtonic"; });
+        expect(env.message).to.equal("Welcome, @freshtonic, from CampJS 3");
     });
 });
 ```
