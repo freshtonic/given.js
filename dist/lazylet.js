@@ -7,23 +7,30 @@
       this.vars = {};
     }
 
-    Env.prototype.Let = function(name, thing) {
-      if (typeof thing === 'function') {
-        this.vars[name] = thing.bind(this);
-      } else {
-        this.vars[name] = (function(_this) {
-          return function() {
-            return thing;
-          };
-        })(this);
+    Object.defineProperty(Env.prototype, 'Let', {
+      writable: false,
+      configurable: false,
+      value: function(name, thing) {
+        if (name === 'Let') {
+          throw 'cannot redefine Let';
+        }
+        if (typeof thing === 'function') {
+          this.vars[name] = thing.bind(this);
+        } else {
+          this.vars[name] = (function(_this) {
+            return function() {
+              return thing;
+            };
+          })(this);
+        }
+        return Object.defineProperty(this, name, {
+          get: function() {
+            return this.vars[name]();
+          },
+          configurable: true
+        });
       }
-      return Object.defineProperty(this, name, {
-        get: function() {
-          return this.vars[name]();
-        },
-        configurable: true
-      });
-    };
+    });
 
     return Env;
 

@@ -27,3 +27,12 @@ describe "lazylet", ->
     it "works for the derived case", ->
       expect(env.message).toEqual "Matt Allen likes to write code"
 
+  describe 'being sane', ->
+
+    it 'does not allow redefinition of "Let"', ->
+      expect(-> env.Let 'Let', 'anything').toThrow 'cannot redefine Let'
+
+    it 'does not allow Let to be directly overwritten', ->
+      env.Let = 'something else'
+      expect(typeof env.Let).toEqual 'function'
+
