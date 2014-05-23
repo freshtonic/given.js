@@ -5,12 +5,12 @@ class Env
 
   Let: (name, thing) ->
     if typeof thing is 'function'
-      @vars[name] = thing
+      @vars[name] = thing.bind @
     else
-      @vars[name] = -> thing
+      @vars[name] = => thing
 
     Object.defineProperty @, name,
-      get: @vars[name]
-      enumerable: true
+      get: -> @vars[name]()
+      configurable: true
 
 (module?.exports.Env = Env) or @Env = Env

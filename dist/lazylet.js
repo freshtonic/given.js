@@ -9,15 +9,19 @@
 
     Env.prototype.Let = function(name, thing) {
       if (typeof thing === 'function') {
-        this.vars[name] = thing;
+        this.vars[name] = thing.bind(this);
       } else {
-        this.vars[name] = function() {
-          return thing;
-        };
+        this.vars[name] = (function(_this) {
+          return function() {
+            return thing;
+          };
+        })(this);
       }
       return Object.defineProperty(this, name, {
-        get: this.vars[name],
-        enumerable: true
+        get: function() {
+          return this.vars[name]();
+        },
+        configurable: true
       });
     };
 
