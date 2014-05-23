@@ -1,0 +1,29 @@
+{
+  "name": "lazylet",
+  "version": "0.0.1",
+  "description": "Lazily evaluated variables for your specs",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "spec": "make spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/freshtonic/lazylet.git"
+  },
+  "keywords": [ "lazy", "rspec", "jasmine", "mocha", "test", "spec" ],
+  "author": "James Sadler <freshtonic@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/freshtonic/lazylet/issues"
+  },
+  "homepage": "https://github.com/freshtonic/lazylet",
+  "devDependencies": {
+    "jasmine-node": "1.14.3",
+    "wach": "",
+    "coffee-script": ">=1.7.1",
+    "expect.js": ""
+  }
+}
