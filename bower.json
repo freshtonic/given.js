@@ -1,0 +1,30 @@
+{
+  "name": "lazylet",
+  "version": "0.1.0",
+  "authors": [
+    "James Sadler <freshtonic@gmail.com>"
+  ],
+  "description": "Lazily evaluated variables for your specs",
+  "main": "dist/lazylet.js",
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "lazy",
+    "rspec",
+    "jasmine",
+    "mocha",
+    "test",
+    "spec"
+  ],
+  "license": "MIT",
+  "homepage": "http://github.com/freshtonic/lazylet.git",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
