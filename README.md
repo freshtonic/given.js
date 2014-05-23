@@ -12,19 +12,6 @@ Variables are accessed from the environment as if they are plain JS properties.
 Under the hood, the properties are defined using Object.defineProperty with
 a 'get' accessor in order that their value can be computed on demand.
 
-To set a variable on the environment that *is* a function, nest it within
-another function (to avoid ambiguity), like so:
-
-```javascript
-
-env.Let('aFunction', function() {
-    // This function will be the variable's value.
-    return function() {
-        return 'foo';
-    };
-});
-
-```
 
 # Usage
 
@@ -50,4 +37,20 @@ describe('My test', function(){
         expect(env.message).to.equal("The value is 2");
     });
 });
+```
+
+# Caveats
+
+To set a variable with a value that *is* a function, nest it within
+another function (to avoid ambiguity with dynamically computing a value), like so:
+
+```javascript
+
+env.Let('aFunction', function() {
+    // This function will be the variable's value.
+    return function() {
+        return 'foo';
+    };
+});
+
 ```
