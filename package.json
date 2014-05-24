@@ -2,7 +2,7 @@
   "name": "lazylet",
   "version": "0.1.1",
   "description": "Lazily evaluated variables for your specs",
-  "main": "index.js",
+  "main": "lib/lazylet.js",
   "directories": {
     "test": "test"
   },

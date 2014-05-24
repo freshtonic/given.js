@@ -5,7 +5,7 @@
     "James Sadler <freshtonic@gmail.com>"
   ],
   "description": "Lazily evaluated variables for your specs",
-  "main": "dist/lazylet.js",
+  "main": "lib/lazylet.js",
   "moduleType": [
     "globals",
     "node"
