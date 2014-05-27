@@ -1,4 +1,7 @@
 
+[![Build
+Status](https://travis-ci.org/freshtonic/lazylet.svg?token=f5a853d113c43cdedc317d637e9b22e7daedce01&branch=master)](https://travis-ci.org/freshtonic/lazylet.git)
+
 # lazylet
 
 *lazylet* is a lazy-evaluation system for use in your specs.
