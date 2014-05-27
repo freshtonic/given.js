@@ -21,7 +21,7 @@ defineOneVariable = (name, thing) ->
 
 defineInBulk = (object, preserve=false) ->
   resetEnv() if not preserve
-  for name, thing in object
+  for name, thing of object
     defineOneVariable name, thing
 
 # The arguments to this function are (name, thing) or (object).

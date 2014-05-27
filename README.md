@@ -32,6 +32,15 @@ Add it to your package.json or `npm install lazylet`.
       expect(env.name).toEqual("James Sadler");
     });
 
+    it('can define variables in bulk', function() {
+      env.Let({
+        name: 'James Sadler',
+        age: 36
+      });
+      expect(env.name).toEqual('James Sadler');
+      expect(env.age).toEqual(36);
+    });
+
     it("can define a variable that is depends on another and is computed on demand", function() {
       env.Let('name', 'James Sadler');
       env.Let('message', function() {

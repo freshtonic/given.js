@@ -12,6 +12,13 @@ describe "lazylet usage", ->
     env.Let 'message', -> "Hello, #{@name}!"
     expect(env.message).toEqual 'Hello, James Sadler!'
 
+  it 'can define variables in bulk', ->
+    env.Let
+      name: 'James Sadler'
+      age: 36
+    expect(env.name).toEqual 'James Sadler'
+    expect(env.age).toEqual 36
+
   it "does not clear the environment when declaring variables individually", ->
     env.Let 'name', 'James Sadler'
     env.Let 'age', 36
