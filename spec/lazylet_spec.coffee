@@ -32,7 +32,7 @@ describe "lazylet usage", ->
       name: 'James Sadler'
     expect(typeof env.age).toBe 'undefined'
 
-  it 'permits bulk declaration of variables without clearing the environment', ->
+  it 'can bulk-declare variables without clearing the environment', ->
     env.Let 'name', 'James Sadler'
     env.Let 'age', 36
     env.Let.preserve
@@ -43,6 +43,12 @@ describe "lazylet usage", ->
     env.Let 'name', 'James Sadler'
     env.Let.clear()
     expect(typeof env.name).toBe 'undefined'
+
+  it 'can define variable in terms of the existing value', ->
+    env.Let 'array', [1, 2, 3]
+    env.Let 'array', ->
+      @array.concat 4
+    expect(env.array).toEqual [1, 2, 3, 4]
 
   describe 'behaving in sane manner', ->
 

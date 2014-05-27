@@ -1,21 +1,34 @@
 
 env = {}
+top = {}
 vars = {}
 
 resetEnv = ->
   vars = {}
+  top = {}
   for name in Object.keys(env) when name isnt 'Let'
     delete env[name]
 
-defineOneVariable = (name, thing) ->
+defineOneVariable = (name, valueOrFn) ->
   throw 'cannot redefine Let' if name is 'Let'
-  if typeof thing is 'function'
-    vars[name] = thing.bind env
+  fn = undefined
+  if typeof valueOrFn is 'function'
+    fn = valueOrFn.bind top
   else
-    vars[name] = -> thing
+    fn = -> valueOrFn
+
+  current = vars[name] or (->)
+  vars[name] = -> fn current()
+
+  top = Object.create top
+
+  Object.defineProperty top, name,
+    get: vars[name]
+    configurable: true
+    enumerable: true
 
   Object.defineProperty env, name,
-    get: vars[name]
+    get: -> top[name]
     configurable: true
     enumerable: true
 
@@ -49,4 +62,4 @@ Object.defineProperties Let,
     configurable: false
     value: resetEnv
 
-(module?.exports = env) or @env = env
+(module?.exports = env) or @lazylet = env: env
