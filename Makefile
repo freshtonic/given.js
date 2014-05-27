@@ -35,7 +35,7 @@ clean:
 	@rm -fr build/*
 
 watch: compile
-	@node_modules/wach/bin/wach -o src/*.coffee,spec/*.coffee, make compile spec
+	@wach -o src/*.coffee,spec/*.coffee, make compile spec
 
 all: compile spec 
 

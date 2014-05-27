@@ -22,7 +22,6 @@
   "homepage": "https://github.com/freshtonic/lazylet",
   "devDependencies": {
     "jasmine-node": "1.14.3",
-    "wach": "",
     "coffee-script": ">=1.7.1",
     "expect.js": ""
   }
