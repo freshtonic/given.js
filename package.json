@@ -1,6 +1,6 @@
 {
   "name": "lazylet",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Lazily evaluated variables for your specs",
   "main": "lib/lazylet.js",
   "directories": {
@@ -23,6 +23,6 @@
   "devDependencies": {
     "jasmine-node": "1.14.3",
     "coffee-script": ">=1.7.1",
-    "expect.js": ""
+    "expect.js": "~0.3.1"
   }
 }
