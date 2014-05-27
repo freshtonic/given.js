@@ -15,8 +15,11 @@ Variables are accessed from the environment as if they are plain JS properties.
 Under the hood, the properties are defined using Object.defineProperty with
 a 'get' accessor in order that their value can be computed on demand.
 
+## Installation
 
-# Usage
+Add it to your package.json or `npm install lazylet`.
+
+## Usage
 
 ```javascript
 
@@ -85,7 +88,7 @@ a 'get' accessor in order that their value can be computed on demand.
 
 ```
 
-# Caveats
+## Caveats
 
 To set a variable with a value that *is* a function, nest it within
 another function (to avoid ambiguity with dynamically computing a value), like so:
@@ -100,3 +103,27 @@ env.Let('aFunction', function() {
 });
 
 ```
+
+## Running the specs
+
+Run `make spec`.
+
+Install the `wach` node module if you would like to have the specs run
+automatically when the source or specs are modified.
+
+- `npm install -g wach`
+- `make watch`
+
+## Contributing
+
+1. Fork it ( https://github.com/freshtonic/lazylet/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
+
+## Licence
+
+Copyright (c) 2014, lazylet is developed and maintained by James Sadler, and is
+released under the open MIT Licence.
+
