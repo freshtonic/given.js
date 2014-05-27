@@ -16,30 +16,70 @@ a 'get' accessor in order that their value can be computed on demand.
 # Usage
 
 ```javascript
-var Env = require('let').Env;
 
-describe('My test', function(){
+  var env = require('lazylet');
 
-    var Let = undefined;
+  describe("lazylet usage", function() {
 
-    beforeEach(function() {
-        env = new Env();
-        env.Let('name', 'James');
-        env.Let('campJsNumber', 3);
-        env.Let('message', function() {
-            return "Welcome, " + this.name + ", from CampJS " + this.campJsNumber;
-        });
+    it("can define a variable", function() {
+      env.Let('name', 'James Sadler');
+      expect(env.name).toEqual("James Sadler");
     });
 
-    it("should produce the expected message", function(){
-        expect(env.message).to.equal("Welcome, James, from CampJS 3");
+    it("can define a variable that is depends on another and is computed on demand", function() {
+      env.Let('name', 'James Sadler');
+      env.Let('message', function() {
+        return "Hello, " + this.name + "!";
+      });
+      expect(env.message).toEqual('Hello, James Sadler!');
     });
 
-    it("should use redefined variables", function(){
-        env.Let('name', function() { return "@freshtonic"; });
-        expect(env.message).to.equal("Welcome, @freshtonic, from CampJS 3");
+    it("does not clear the environment when declaring variables individually", function() {
+      env.Let('name', 'James Sadler');
+      env.Let('age', 36);
+      expect(env.name).toEqual("James Sadler");
+      expect(env.age).toEqual(36);
     });
-});
+
+    it("clears the environment when declaring variables in bulk", function() {
+      env.Let('name', 'James Sadler');
+      env.Let('age', 36);
+      env.Let({
+        name: 'James Sadler'
+      });
+      expect(typeof env.age).toBe('undefined');
+    });
+
+    it('permits bulk declaration of variables without clearing the environment', function() {
+      env.Let('name', 'James Sadler');
+      env.Let('age', 36);
+      env.Let.preserve({
+        name: 'James Sadler'
+      });
+      expect(env.age).toBe(36);
+    });
+
+    it('provides a way to explicitly clear the environment', function() {
+      env.Let('name', 'James Sadler');
+      env.Let.clear();
+      expect(typeof env.name).toBe('undefined');
+    });
+
+    describe('behaving in sane manner', function() {
+
+      it('does not allow redefinition of "Let"', function() {
+        expect(function() {
+          return env.Let('Let', 'anything');
+        }).toThrow('cannot redefine Let');
+      });
+
+      it('does not allow Let to be directly overwritten', function() {
+        env.Let = 'something else';
+        expect(typeof env.Let).toEqual('function');
+      });
+    });
+  });
+
 ```
 
 # Caveats

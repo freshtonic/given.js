@@ -1,33 +1,43 @@
 
-Env = require('../build/lazylet').Env
+env = require '../build/lazylet'
 
-describe "lazylet", ->
-
-  env = undefined
-
-  beforeEach ->
-    env = new Env()
-    env.Let 'name', "James Sadler"
-    env.Let 'message', -> "#{@name} likes to write code"
+describe "lazylet usage", ->
 
   it "can define a variable", ->
+    env.Let 'name', 'James Sadler'
     expect(env.name).toEqual "James Sadler"
 
-  it "can define a variable that depends on another one", ->
-    expect(env.message).toEqual "James Sadler likes to write code"
+  it "can define a variable that is depends on another and is computed on demand", ->
+    env.Let 'name', 'James Sadler'
+    env.Let 'message', -> "Hello, #{@name}!"
+    expect(env.message).toEqual 'Hello, James Sadler!'
 
-  describe 'redefinition of existing variables', ->
+  it "does not clear the environment when declaring variables individually", ->
+    env.Let 'name', 'James Sadler'
+    env.Let 'age', 36
+    expect(env.name).toEqual "James Sadler"
+    expect(env.age).toEqual 36
 
-    beforeEach ->
-      env.Let 'name', 'Matt Allen'
+  it "clears the environment when declaring variables in bulk", ->
+    env.Let 'name', 'James Sadler'
+    env.Let 'age', 36
+    env.Let
+      name: 'James Sadler'
+    expect(typeof env.age).toBe 'undefined'
 
-    it "works for the simple case", ->
-      expect(env.name).toEqual 'Matt Allen'
+  it 'permits bulk declaration of variables without clearing the environment', ->
+    env.Let 'name', 'James Sadler'
+    env.Let 'age', 36
+    env.Let.preserve
+      name: 'James Sadler'
+    expect(env.age).toBe 36
 
-    it "works for the derived case", ->
-      expect(env.message).toEqual "Matt Allen likes to write code"
+  it 'provides a way to explicitly clear the environment', ->
+    env.Let 'name', 'James Sadler'
+    env.Let.clear()
+    expect(typeof env.name).toBe 'undefined'
 
-  describe 'being sane', ->
+  describe 'behaving in sane manner', ->
 
     it 'does not allow redefinition of "Let"', ->
       expect(-> env.Let 'Let', 'anything').toThrow 'cannot redefine Let'
