@@ -15,7 +15,7 @@ defineOneVariable = (name, thing) ->
     vars[name] = -> thing
 
   Object.defineProperty env, name,
-    get: -> vars[name]()
+    get: vars[name]
     configurable: true
     enumerable: true
 
