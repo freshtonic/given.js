@@ -34,15 +34,19 @@ Let = ->
     [name, thing] = args
     defineOneVariable name, thing
 
-Let.preserve = (object) ->
-  defineInBulk object, true
-
-Let.clear = ->
-  resetEnv()
-
 Object.defineProperty env, 'Let',
   writable: false
   configurable: false
   value: Let
+
+Object.defineProperties Let,
+  preserve:
+    writable: false
+    configurable: false
+    value: (object) -> defineInBulk object, true
+  clear:
+    writable: false
+    configurable: false
+    value: resetEnv
 
 (module?.exports = env) or @env = env
