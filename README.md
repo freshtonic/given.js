@@ -35,7 +35,7 @@ Add it to your package.json or `npm install lazylet`.
     it("can define a variable that is depends on another and is computed on demand", function() {
       Let('name', 'James Sadler');
       Let('message', function() {
-        "Hello, " + this.name + "!";
+        return "Hello, " + this.name + "!";
       });
       expect(env.message).toEqual('Hello, James Sadler!');
     });
@@ -48,7 +48,7 @@ Add it to your package.json or `npm install lazylet`.
       expect(env.name).toEqual('James Sadler');
       expect(env.age).toEqual(36);
     });
-    
+
     it("does not clear the environment when declaring variables individually", function() {
       Let('name', 'James Sadler');
       Let('age', 36);
@@ -68,6 +68,41 @@ Add it to your package.json or `npm install lazylet`.
         return this.array.concat(4);
       });
       expect(env.array).toEqual([1, 2, 3, 4]);
+    });
+
+    it('memoizes variables when they are evaluated', function() {
+      var count;
+      count = 0;
+      Let({
+        name: function() {
+          count += 1;
+          return 'James';
+        }
+      });
+      env.name;
+      expect(count).toEqual(1);
+      env.name;
+      expect(count).toEqual(1);
+    });
+
+    it('forgets the memoization for all variables when any variable is redefined', function() {
+      var count;
+      count = 0;
+      Let({
+        name: function() {
+          count += 1;
+          return 'James';
+        }
+      });
+      expect(env.name).toEqual('James');
+      expect(count).toEqual(1);
+      Let({
+        age: function() {
+          return 36;
+        }
+      });
+      expect(env.name).toEqual('James');
+      expect(count).toEqual(2);
     });
 
     describe('behaving in sane manner', function() {
