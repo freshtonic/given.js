@@ -3,34 +3,38 @@ LazyLet =
   Env: ->
     env = {}
     top = {}
-    vars = {}
+    lazyFns = {}
+    memos = {}
 
     resetEnv = ->
-      vars = {}
+      lazyFns = {}
       top = {}
+      memos = {}
       for name in Object.keys(env) when name isnt 'Let'
         delete env[name]
 
     defineOneVariable = (name, valueOrFn) ->
       throw 'cannot redefine Let' if name is 'Let'
-      fn = undefined
       if typeof valueOrFn is 'function'
-        fn = valueOrFn.bind top
+        lazyFns[name] = valueOrFn.bind top
       else
-        fn = -> valueOrFn
-
-      current = vars[name] or (->)
-      vars[name] = -> fn current()
+        lazyFns[name] = -> valueOrFn
 
       top = Object.create top
 
+      memos = {} 
+
       Object.defineProperty top, name,
-        get: vars[name]
+        get: lazyFns[name]
         configurable: true
         enumerable: true
 
       Object.defineProperty env, name,
-        get: -> top[name]
+        get: ->
+          if memos[name]?
+            memos[name]
+          else
+            memos[name] = top[name]
         configurable: true
         enumerable: true
 
