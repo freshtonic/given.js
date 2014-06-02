@@ -51,6 +51,16 @@ describe "lazylet usage", ->
     env.name
     expect(count).toEqual 1
 
+  it 'uses memoized variables when variables are defined in terms of others', ->
+    count = 0
+    Let
+      val1: ->
+        count += 1
+        count
+      val2: -> @val1
+    expect(env.val1).toEqual 1
+    expect(env.val2).toEqual 1
+
   it 'forgets the memoization for all variables when any variable is redefined', ->
     count = 0
     Let name: ->

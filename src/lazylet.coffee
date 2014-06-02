@@ -15,14 +15,21 @@ LazyLet =
 
     defineOneVariable = (name, valueOrFn) ->
       throw 'cannot redefine Let' if name is 'Let'
+
       if typeof valueOrFn is 'function'
-        lazyFns[name] = valueOrFn.bind top
+        fn = valueOrFn.bind top
       else
-        lazyFns[name] = -> valueOrFn
+        fn = -> valueOrFn
+
+      lazyFns[name] = ->
+        if memos[name]?
+          memos[name]
+        else
+          memos[name] = fn()
 
       top = Object.create top
 
-      memos = {} 
+      memos = {}
 
       Object.defineProperty top, name,
         get: lazyFns[name]
@@ -30,11 +37,7 @@ LazyLet =
         enumerable: true
 
       Object.defineProperty env, name,
-        get: ->
-          if memos[name]?
-            memos[name]
-          else
-            memos[name] = top[name]
+        get: -> top[name]
         configurable: true
         enumerable: true
 

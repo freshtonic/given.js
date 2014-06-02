@@ -105,6 +105,22 @@ Add it to your package.json or `npm install lazylet`.
       expect(count).toEqual(2);
     });
 
+    it('uses memoized variables when variables are defined in terms of others', function() {
+      var count;
+      count = 0;
+      Let({
+        val1: function() {
+          count += 1;
+          return count;
+        },
+        val2: function() {
+          return this.val1;
+        }
+      });
+      expect(env.val1).toEqual(1);
+      expect(env.val2).toEqual(1);
+    });
+
     describe('behaving in sane manner', function() {
       it('does not allow redefinition of "Let"', function() {
         expect(function() {
