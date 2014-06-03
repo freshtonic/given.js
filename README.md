@@ -15,6 +15,9 @@ Variables are accessed from the environment as if they are plain JS properties.
 Under the hood, the properties are defined using Object.defineProperty with
 a 'get' accessor in order that their value can be computed on demand.
 
+_WARNING_: LazyLet is not yet stable. The API may change significantly before
+1.0.0 and there may be show-stopping bugs.
+
 ## Installation
 
 Add it to your package.json or `npm install lazylet`.
