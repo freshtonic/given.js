@@ -1,4 +1,8 @@
 
+# Function.prototype.bind is absent in PhantomJS. Implement it ourselves.
+bind = (fn, self) ->
+  -> fn.apply self, arguments
+
 LazyLet =
   Env: ->
     env = {}
@@ -17,7 +21,7 @@ LazyLet =
       throw 'cannot redefine Let' if name is 'Let'
 
       if typeof valueOrFn is 'function'
-        fn = valueOrFn.bind top
+        fn = bind valueOrFn, top
       else
         fn = -> valueOrFn
 
