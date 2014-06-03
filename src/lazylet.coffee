@@ -3,47 +3,64 @@
 bind = (fn, self) ->
   -> fn.apply self, arguments
 
+asFn = (valueOrFn) ->
+  if typeof valueOrFn is 'function'
+    valueOrFn
+  else
+    -> valueOrFn
+
+getter = (obj, name, fn) ->
+  Object.defineProperty obj, name,
+    get: fn
+    configurable: true
+    enumerable: true
+
 LazyLet =
   Env: ->
-    env = {}
-    top = {}
-    lazyFns = {}
+    env   = {}
+    funs  = {}
     memos = {}
 
     resetEnv = ->
-      lazyFns = {}
-      top = {}
+      funs = {}
       memos = {}
       for name in Object.keys(env) when name isnt 'Let'
         delete env[name]
 
-    defineOneVariable = (name, valueOrFn) ->
-      throw 'cannot redefine Let' if name is 'Let'
-
-      if typeof valueOrFn is 'function'
-        fn = bind valueOrFn, top
-      else
-        fn = -> valueOrFn
-
-      lazyFns[name] = ->
-        if memos[name]?
-          memos[name]
+    memoize = (name, fn) ->
+      ->
+        memo = memos[name]
+        if memo?
+          memo
         else
           memos[name] = fn()
 
-      top = Object.create top
+    # Redefine an existing variable.
+    # This specifically supports the case where a variable is defined in terms
+    # of its existing value (avoiding stack overflow). This is achieved by
+    # running the most recent definition for computing the variable in a new
+    # environment that prototypically inherits the old one.
+    redefine = (name, fn) ->
+      newEnv       = Object.create env
+      oldFn        = funs[name]
+      getter newEnv, name, oldFn.bind(env)
+      newFn        = fn.bind newEnv
+      getter env, name, newFn
+      newFn
+
+    defineOneVariable = (name, valueOrFn) ->
+      throw 'cannot redefine Let' if name is 'Let'
 
       memos = {}
 
-      Object.defineProperty top, name,
-        get: lazyFns[name]
-        configurable: true
-        enumerable: true
+      fn = asFn valueOrFn
 
-      Object.defineProperty env, name,
-        get: -> top[name]
-        configurable: true
-        enumerable: true
+      if funs[name]?
+        fn = redefine name, fn
+      else
+        getter env, name, memoize(name, fn.bind(env))
+
+      funs[name] = fn
 
     defineInBulk = (object) ->
       for name, thing of object
