@@ -72,4 +72,7 @@ LazyLet =
 
     env
 
-(module?.exports = LazyLet) or @LazyLet = LazyLet
+if (typeof module isnt 'undefined') and module.exports?
+  module.exports = LazyLet
+else
+  @LazyLet = LazyLet
