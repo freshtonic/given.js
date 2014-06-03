@@ -37,9 +37,20 @@ describe "lazylet usage", ->
     expect(typeof env.name).toBe 'undefined'
 
   it 'can define variable in terms of the existing value', ->
-    Let 'array', [1, 2, 3]
-    Let 'array', -> @array.concat 4
-    expect(env.array).toEqual [1, 2, 3, 4]
+    Let 'array', -> [1]
+    Let 'array', -> @array.concat 2
+    Let 'array', -> @array.concat 3
+    expect(env.array).toEqual [1, 2, 3]
+
+  it 'supports the definition of variables that depend on a variable that is not yet defined', ->
+    Let foo: -> @bar
+    Let bar: -> 'Bar'
+    expect(env.foo).toEqual 'Bar'
+
+  it 'supports the redefinition of', ->
+    Let name1: -> "James"
+    Let message: -> "#{@name1} #{@name2}"
+    Let name2: -> "Kellie"
 
   it 'memoizes variables when they are evaluated', ->
     count = 0
@@ -53,11 +64,12 @@ describe "lazylet usage", ->
 
   it 'uses memoized variables when variables are defined in terms of others', ->
     count = 0
-    Let
-      val1: ->
-        count += 1
-        count
-      val2: -> @val1
+    Let val1: ->
+      count += 1
+      count
+    Let val2: ->
+      @val1
+
     expect(env.val1).toEqual 1
     expect(env.val2).toEqual 1
 
@@ -71,6 +83,16 @@ describe "lazylet usage", ->
     Let age: -> 36
     expect(env.name).toEqual 'James'
     expect(count).toEqual 2
+
+  it 'exposes all defined properties as enumerable', ->
+    Let name: -> 'James'
+    Let age: -> 36
+    Let occupation: -> 'programmer'
+    expect(JSON.parse JSON.stringify env).toEqual
+      name: 'James'
+      age: 36
+      occupation: 'programmer'
+
 
   describe 'behaving in sane manner', ->
 
