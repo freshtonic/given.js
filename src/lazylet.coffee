@@ -17,13 +17,16 @@ getter = (obj, name, fn) ->
 
 LazyLet =
   Env: ->
+    privateEnv = {}
     env   = {}
     funs  = {}
     memos = {}
+    illegallyAccessedVariable = undefined
 
     resetEnv = ->
       funs = {}
       memos = {}
+      privateEnv = {}
       for name in Object.keys(env) when name isnt 'Let'
         delete env[name]
 
@@ -55,12 +58,20 @@ LazyLet =
     # running the most recent definition for computing the variable in a new
     # environment that prototypically inherits the old one.
     redefine = (name, fn) ->
-      newEnv       = Object.create env
+      newEnv       = Object.create privateEnv
       oldFn        = funs[name]
-      getter newEnv, name, bind(oldFn, env)
+      getter newEnv, name, bind(oldFn, privateEnv)
       newFn        = bind fn, newEnv
-      getter env, name, newFn
+      getter privateEnv, name, newFn
       newFn
+
+    trapOuterEnvAccess = (name, fn) ->
+      ->
+        illegallyAccessedVariable = name
+        try
+          fn()
+        finally
+          illegallyAccessedVariable = undefined
 
     defineOneVariable = (name, valueOrFn) ->
       throw 'cannot redefine Let' if name is 'Let'
@@ -72,7 +83,13 @@ LazyLet =
       if funs[name]?
         fn = redefine name, fn
       else
-        getter env, name, memoize(name, trapStackOverflow(name, bind(fn, env)))
+        handler = memoize name, trapOuterEnvAccess(name, trapStackOverflow(name, bind(fn, privateEnv)))
+        getter privateEnv, name, handler
+        getter env, name, ->
+          if illegallyAccessedVariable?
+            throw "illegal attempt to access the Let environment in the definition of '#{illegallyAccessedVariable}'"
+          else
+            privateEnv[name]
 
       funs[name] = fn
 
