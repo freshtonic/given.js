@@ -49,8 +49,9 @@ describe "lazylet usage", ->
 
   it 'supports the redefinition of', ->
     Let name1: -> "James"
-    Let message: -> "#{@name1} #{@name2}"
+    Let message: -> "#{@name1} and #{@name2}"
     Let name2: -> "Kellie"
+    expect(env.message).toEqual 'James and Kellie'
 
   it 'memoizes variables when they are evaluated', ->
     count = 0

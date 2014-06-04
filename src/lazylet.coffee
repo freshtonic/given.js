@@ -43,8 +43,8 @@ LazyLet =
     redefine = (name, fn) ->
       newEnv       = Object.create env
       oldFn        = funs[name]
-      getter newEnv, name, oldFn.bind(env)
-      newFn        = fn.bind newEnv
+      getter newEnv, name, bind(oldFn, env)
+      newFn        = bind fn, newEnv
       getter env, name, newFn
       newFn
 
@@ -58,7 +58,7 @@ LazyLet =
       if funs[name]?
         fn = redefine name, fn
       else
-        getter env, name, memoize(name, fn.bind(env))
+        getter env, name, memoize(name, bind(fn, env))
 
       funs[name] = fn
 
