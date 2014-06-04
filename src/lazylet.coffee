@@ -35,6 +35,20 @@ LazyLet =
         else
           memos[name] = fn()
 
+    isStackOverflowError = (err) ->
+      message = (if typeof err is 'string' then err else err?.message) or ''
+      message.match /\bstack|recursion\b/
+
+    trapStackOverflow = (name, fn) ->
+      ->
+        try
+          fn()
+        catch err
+          if isStackOverflowError err
+            throw "recursive definition of variable '#{name}' detected"
+          else
+            throw err
+
     # Redefine an existing variable.
     # This specifically supports the case where a variable is defined in terms
     # of its existing value (avoiding stack overflow). This is achieved by
@@ -58,7 +72,7 @@ LazyLet =
       if funs[name]?
         fn = redefine name, fn
       else
-        getter env, name, memoize(name, bind(fn, env))
+        getter env, name, memoize(name, trapStackOverflow(name, bind(fn, env)))
 
       funs[name] = fn
 
