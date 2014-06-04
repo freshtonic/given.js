@@ -26,12 +26,6 @@ describe "LazyLet", ->
     expect(env.name).to.equal 'James Sadler'
     expect(env.age).to.equal 36
 
-  it "does not clear the environment when declaring variables individually", ->
-    Let 'name', 'James Sadler'
-    Let 'age', 36
-    expect(env.name).to.equal "James Sadler"
-    expect(env.age).to.equal 36
-
   it 'provides a way to explicitly clear the environment', ->
     Let 'name', 'James Sadler'
     Let.clear()
