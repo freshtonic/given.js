@@ -2,7 +2,7 @@
 LazyLet = require '../build/lazylet'
 expect = require 'expect.js'
 
-describe "lazylet usage", ->
+describe "LazyLet", ->
 
   Let = env = undefined
 
@@ -110,7 +110,7 @@ describe "lazylet usage", ->
       age: 36
       occupation: 'programmer'
 
-  describe 'behaves well', ->
+  describe 'is well-behaved and', ->
 
     it 'does not allow redefinition of "Let"', ->
       expect(-> Let 'Let', 'anything').to.throwException (e) ->
@@ -121,4 +121,12 @@ describe "lazylet usage", ->
       Let b: -> @a
       expect(-> env.a).to.throwException (e) ->
         expect(e).to.match /recursive definition of variable '(a|b)' detected/
+
+    it 'prevents the Let environment from being referenced within a builder function', ->
+      Let foo: -> 'foo'
+      Let viaThis: -> @foo
+      Let viaEnv: -> env.foo
+      expect(env.viaThis).to.eql 'foo'
+      expect(-> env.viaEnv).to.throwException (e) ->
+        expect(e).to.equal "illegal attempt to access the Let environment in the definition of 'viaEnv'"
 
