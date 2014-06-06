@@ -23,6 +23,9 @@ $(DIST): $(TARGET_JS)
 	@echo CONCATENATE: $<
 	@cat $^ > $@
 
+README.md: README.md.raw spec/lazylet_spec.coffee build/lazylet_spec.js
+	@bin/make-readme
+
 # TASKS
 
 compile: $(DIST)
@@ -32,12 +35,12 @@ spec: $(DIST) $(SPEC_JS)
 	@node_modules/jasmine-node/bin/jasmine-node $(SPEC_JS)
 
 clean:
-	@rm -fr build/*
+	@rm -fr build/* README.md
 
 watch: compile
 	@wach -o src/*.coffee,spec/*.coffee, make compile spec
 
-all: compile spec 
+all: compile spec README.md 
 
 .PHONY: all compile spec clean watch
 
