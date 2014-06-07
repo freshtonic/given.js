@@ -48,7 +48,7 @@ LazyLet =
           fn()
         catch err
           if isStackOverflowError err
-            throw "recursive definition of variable '#{name}' detected"
+            throw new Error "recursive definition of variable '#{name}' detected"
           else
             throw err
 
@@ -74,7 +74,7 @@ LazyLet =
           illegallyAccessedVariable = undefined
 
     defineOneVariable = (name, valueOrFn) ->
-      throw 'cannot redefine Let' if name is 'Let'
+      throw new Error 'cannot redefine Let' if name is 'Let'
 
       memos = {}
 
@@ -87,7 +87,7 @@ LazyLet =
         getter privateEnv, name, handler
         getter env, name, ->
           if illegallyAccessedVariable?
-            throw "illegal attempt to access the Let environment in the definition of '#{illegallyAccessedVariable}'"
+            throw new Error "illegal attempt to access the Let environment in the definition of '#{illegallyAccessedVariable}'"
           else
             privateEnv[name]
 
