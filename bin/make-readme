@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+def wrap(text, lang)
+  "```#{lang}\n#{text}```"
+end
+
+def clean_js(js)
+  js = js.lines[3..-4].join
+  js.gsub(/\}\);/, "});\n").
+    gsub(/return expect/, 'expect').
+    gsub(/return it/, 'it').
+    gsub(/return describe/, 'describe').
+    gsub(/return Let/, 'Let').
+    gsub(/void 0/, 'undefined')
+end
+
+File.open('README.md', 'w') do |f|
+  f.write File.read('README.md.raw').
+    gsub('_USAGE_EXAMPLE_JS_',     wrap(clean_js(File.read('build/lazylet_spec.js')), 'js')).
+    gsub('_USAGE_EXAMPLE_COFFEE_', wrap(File.read('spec/lazylet_spec.coffee'), 'coffee'))
+end
