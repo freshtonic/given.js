@@ -30,7 +30,6 @@ README.md: README.md.raw spec/given.spec.coffee build/given.spec.js
 compile: $(DIST)
 
 spec: $(DIST) $(SPEC_JS)
-	@echo $(SPEC_JS)
 	@echo SPEC: $(SPEC_JS)
 	@node_modules/jasmine-node/bin/jasmine-node $(SPEC_JS)
 

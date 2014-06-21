@@ -2,61 +2,59 @@
 Given = require '../build/given'
 expect = require 'expect.js'
 
-describe "Given", ->
+ddescribe "Given", ->
 
-  given = env = undefined
+  given = undefined
 
   beforeEach ->
-    env = Given.Env()
-    given = env.given
+    given = Given @
 
   it "can define a variable", ->
     given 'name', 'James Sadler'
-    expect(env.name).to.equal "James Sadler"
+    expect(@name).to.equal "James Sadler"
 
   it "can define a variable that is depends on another and is computed on demand", ->
     given 'name', 'James Sadler'
     given 'message', -> "Hello, #{@name}!"
-    expect(env.message).to.equal 'Hello, James Sadler!'
+    expect(@message).to.equal 'Hello, James Sadler!'
 
   it 'can define variables in bulk', ->
     given
       name: 'James Sadler'
       age: 36
-    expect(env.name).to.equal 'James Sadler'
-    expect(env.age).to.equal 36
+    expect(@name).to.equal 'James Sadler'
+    expect(@age).to.equal 36
 
   it 'provides a way to explicitly clear the environment', ->
     given 'name', 'James Sadler'
     given.clear()
-    expect(typeof env.name).to.be 'undefined'
+    expect(@name).to.be undefined
 
   it 'can define variable in terms of the existing value', ->
     given 'array', -> [1]
     given 'array', -> @array.concat 2
     given 'array', -> @array.concat 3
-    expect(env.array).to.eql [1, 2, 3]
+    expect(@array).to.eql [1, 2, 3]
 
   it 'supports the definition of variables that depend on a variable that is not yet defined', ->
     given foo: -> @bar
     given bar: -> 'Bar'
-    expect(env.foo).to.equal 'Bar'
+    expect(@foo).to.equal 'Bar'
 
-  # TODO better decscription please
-  it 'supports the redefinition of', ->
+  it 'supports forward definitions', ->
     given name1: -> "James"
     given message: -> "#{@name1} and #{@name2}"
     given name2: -> "Kellie"
-    expect(env.message).to.equal 'James and Kellie'
+    expect(@message).to.equal 'James and Kellie'
 
   it 'memoizes variables when they are evaluated', ->
     count = 0
     given name: ->
       count += 1
       'James'
-    env.name
+    @name
     expect(count).to.equal 1
-    env.name
+    @name
     expect(count).to.equal 1
 
   it 'uses memoized variables when variables are defined in terms of others', ->
@@ -67,8 +65,8 @@ describe "Given", ->
     given val2: ->
       @val1
 
-    expect(env.val1).to.equal 1
-    expect(env.val2).to.equal 1
+    expect(@val1).to.equal 1
+    expect(@val2).to.equal 1
 
   it 'uses memoized variables when variables are defined in terms of their previous values', ->
     count1 = 0
@@ -80,7 +78,7 @@ describe "Given", ->
       count2 += 1
       @val1 + 1
 
-    expect(env.val1).to.equal 2
+    expect(@val1).to.equal 2
     expect(count1).to.equal 1
     expect(count2).to.equal 1
 
@@ -89,13 +87,16 @@ describe "Given", ->
     given name: ->
       count += 1
       'James'
-    expect(env.name).to.equal 'James'
+    expect(@name).to.equal 'James'
     expect(count).to.equal 1
     given age: -> 36
-    expect(env.name).to.equal 'James'
+    expect(@name).to.equal 'James'
     expect(count).to.equal 2
 
   it 'exposes all defined properties as enumerable', ->
+    env   = {}
+    given = Given env
+
     given name: -> 'James'
     given age: -> 36
     given occupation: -> 'programmer'
@@ -113,14 +114,41 @@ describe "Given", ->
     it 'gives a meaningful error when recursive definitions blow the stack', ->
       given a: -> @b
       given b: -> @a
-      expect(-> env.a).to.throwException (e) ->
+      expect(=> @a).to.throwException (e) ->
         expect(e.message).to.match /recursive definition of variable '(a|b)' detected/
 
-    it 'prevents the given environment from being referenced within a builder function', ->
-      given foo: -> 'foo'
-      given viaThis: -> @foo
-      given viaEnv: -> env.foo
-      expect(env.viaThis).to.eql 'foo'
-      expect(-> env.viaEnv).to.throwException (e) ->
-        expect(e.message).to.equal "illegal attempt to access the Given environment in the definition of 'viaEnv'"
+    describe 'to avoid hard to track down bugs prevents the environment being referenced in a definition', ->
+
+      it 'when the environment is not *this*', ->
+        env   = {}
+        given = Given env
+
+        given foo:      -> 'foo'
+        given viaThis:  -> @foo
+        # 'this' is not used to reference values - the top most Given
+        # environment is used instead.
+        given viaEnv:   -> env.foo
+
+        expect(=> env.viaThis).not.to.throwException()
+        expect(=> env.viaEnv).to.throwException (e) ->
+          expect(e.message).to.equal "
+            Illegal attempt to use the Given environment object in the 
+            definition of 'viaEnv'; Use 'this' within value definitions.
+          "
+
+      it 'wnen the environment is *this*', ->
+        given = Given @
+
+        given foo:      -> 'foo'
+        given viaThis:  -> @foo
+        # 'this' is bound to the *this* of the spec itself instead of the
+        # environment under the control of Given.
+        given viaEnv:   => @foo
+
+        expect(=> @viaThis).not.to.throwException()
+        expect(=> @viaEnv).to.throwException (e) ->
+          expect(e.message).to.equal "
+            Illegal attempt to use the Given environment object in the 
+            definition of 'viaEnv'; Use 'this' within value definitions.
+          "
 

@@ -8,6 +8,7 @@ def clean_js(js)
   js = js.lines[3..-4].join
   js.gsub(/\}\);/, "});\n").
     gsub(/return expect/, 'expect').
+    gsub(/return given/, 'given').
     gsub(/return it/, 'it').
     gsub(/return describe/, 'describe').
     gsub(/return Given/, 'Given').
