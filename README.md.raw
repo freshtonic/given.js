@@ -1,10 +1,10 @@
 
 [![Build
-Status](https://api.travis-ci.org/repositories/freshtonic/lazylet.svg?branch=master)](https://travis-ci.org/freshtonic/lazylet.git)
+Status](https://api.travis-ci.org/repositories/freshtonic/given.svg?branch=master)](https://travis-ci.org/freshtonic/given.git)
 
-# lazylet
+# Given
 
-*lazylet* is a lazy-evaluation system for use in your specs.
+*Given* is a lazy-evaluation system for use in your specs.
 
 Variables are defined within an environment object and are lazily computed on
 demand. A variable can hold either a value, function or object. If the variable
@@ -15,12 +15,12 @@ Variables are accessed from the environment as if they are plain JS properties.
 Under the hood, the properties are defined using Object.defineProperty with
 a 'get' accessor in order that their value can be computed on demand.
 
-_WARNING_: LazyLet is not yet stable. The API may change significantly before
+_WARNING_: Given is not yet stable. The API may change significantly before
 1.0.0 and there may be show-stopping bugs.
 
 ## Installation
 
-Add it to your package.json or `npm install lazylet`.
+Add it to your package.json or `npm install given`.
 
 ## Usage
 
@@ -60,7 +60,7 @@ automatically when the source or specs are modified.
 
 ## Contributing
 
-1. Fork it ( https://github.com/freshtonic/lazylet/fork )
+1. Fork it ( https://github.com/freshtonic/given/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
@@ -68,6 +68,6 @@ automatically when the source or specs are modified.
 
 ## Licence
 
-Copyright (c) 2014, lazylet is developed and maintained by James Sadler, and is
+Copyright (c) 2014, given is developed and maintained by James Sadler, and is
 released under the open MIT Licence.
 

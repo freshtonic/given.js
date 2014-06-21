@@ -2,10 +2,10 @@
 SRC_COFFEE  = $(shell find src -name \*.coffee)
 TARGET_JS 	= $(subst src/, build/, $(addsuffix .js, $(basename $(SRC_COFFEE))))
 
-SPEC_COFFEE = $(shell find spec -name \*.coffee)
+SPEC_COFFEE = $(shell find spec/ -name \*.coffee)
 SPEC_JS 	= $(subst spec/, build/, $(addsuffix .js, $(basename $(SPEC_COFFEE))))
 
-DIST = lib/lazylet.js
+DIST = lib/given.js
 
 # RULES
 
@@ -20,10 +20,9 @@ build/%.js: spec/%.coffee
 # TARGETS
 
 $(DIST): $(TARGET_JS)
-	@echo CONCATENATE: $<
 	@cat $^ > $@
 
-README.md: README.md.raw spec/lazylet_spec.coffee build/lazylet_spec.js
+README.md: README.md.raw spec/given.spec.coffee build/given.spec.js
 	@bin/make-readme
 
 # TASKS
@@ -31,6 +30,7 @@ README.md: README.md.raw spec/lazylet_spec.coffee build/lazylet_spec.js
 compile: $(DIST)
 
 spec: $(DIST) $(SPEC_JS)
+	@echo $(SPEC_JS)
 	@echo SPEC: $(SPEC_JS)
 	@node_modules/jasmine-node/bin/jasmine-node $(SPEC_JS)
 

@@ -10,12 +10,12 @@ def clean_js(js)
     gsub(/return expect/, 'expect').
     gsub(/return it/, 'it').
     gsub(/return describe/, 'describe').
-    gsub(/return Let/, 'Let').
+    gsub(/return Given/, 'Given').
     gsub(/void 0/, 'undefined')
 end
 
 File.open('README.md', 'w') do |f|
   f.write File.read('README.md.raw').
-    gsub('_USAGE_EXAMPLE_JS_',     wrap(clean_js(File.read('build/lazylet_spec.js')), 'js')).
-    gsub('_USAGE_EXAMPLE_COFFEE_', wrap(File.read('spec/lazylet_spec.coffee'), 'coffee'))
+    gsub('_USAGE_EXAMPLE_JS_',     wrap(clean_js(File.read('build/given.spec.js')), 'js')).
+    gsub('_USAGE_EXAMPLE_COFFEE_', wrap(File.read('spec/given.spec.coffee'), 'coffee'))
 end

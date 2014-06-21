@@ -1,10 +1,10 @@
 
 [![Build
-Status](https://api.travis-ci.org/repositories/freshtonic/lazylet.svg?branch=master)](https://travis-ci.org/freshtonic/lazylet.git)
+Status](https://api.travis-ci.org/repositories/freshtonic/given.svg?branch=master)](https://travis-ci.org/freshtonic/given.git)
 
-# lazylet
+# Given
 
-*lazylet* is a lazy-evaluation system for use in your specs.
+*Given* is a lazy-evaluation system for use in your specs.
 
 Variables are defined within an environment object and are lazily computed on
 demand. A variable can hold either a value, function or object. If the variable
@@ -15,12 +15,12 @@ Variables are accessed from the environment as if they are plain JS properties.
 Under the hood, the properties are defined using Object.defineProperty with
 a 'get' accessor in order that their value can be computed on demand.
 
-_WARNING_: LazyLet is not yet stable. The API may change significantly before
+_WARNING_: Given is not yet stable. The API may change significantly before
 1.0.0 and there may be show-stopping bugs.
 
 ## Installation
 
-Add it to your package.json or `npm install lazylet`.
+Add it to your package.json or `npm install given`.
 
 ## Usage
 
@@ -28,26 +28,26 @@ Add it to your package.json or `npm install lazylet`.
 
 ```js
 
-  LazyLet = require('../build/lazylet');
+  Given = require('../build/given');
 
   expect = require('expect.js');
 
-  describe("LazyLet", function() {
-    var Let, env;
-    Let = env = undefined;
+  describe("Given", function() {
+    var env, given;
+    given = env = undefined;
     beforeEach(function() {
-      env = LazyLet.Env();
-      Let = env.Let;
+      env = Given.Env();
+      return given = env.given;
     });
 
     it("can define a variable", function() {
-      Let('name', 'James Sadler');
+      given('name', 'James Sadler');
       expect(env.name).to.equal("James Sadler");
     });
 
     it("can define a variable that is depends on another and is computed on demand", function() {
-      Let('name', 'James Sadler');
-      Let('message', function() {
+      given('name', 'James Sadler');
+      given('message', function() {
         return "Hello, " + this.name + "!";
       });
 
@@ -55,7 +55,7 @@ Add it to your package.json or `npm install lazylet`.
     });
 
     it('can define variables in bulk', function() {
-      Let({
+      given({
         name: 'James Sadler',
         age: 36
       });
@@ -65,21 +65,21 @@ Add it to your package.json or `npm install lazylet`.
     });
 
     it('provides a way to explicitly clear the environment', function() {
-      Let('name', 'James Sadler');
-      Let.clear();
+      given('name', 'James Sadler');
+      given.clear();
       expect(typeof env.name).to.be('undefined');
     });
 
     it('can define variable in terms of the existing value', function() {
-      Let('array', function() {
+      given('array', function() {
         return [1];
       });
 
-      Let('array', function() {
+      given('array', function() {
         return this.array.concat(2);
       });
 
-      Let('array', function() {
+      given('array', function() {
         return this.array.concat(3);
       });
 
@@ -87,13 +87,13 @@ Add it to your package.json or `npm install lazylet`.
     });
 
     it('supports the definition of variables that depend on a variable that is not yet defined', function() {
-      Let({
+      given({
         foo: function() {
           return this.bar;
         }
       });
 
-      Let({
+      given({
         bar: function() {
           return 'Bar';
         }
@@ -103,19 +103,19 @@ Add it to your package.json or `npm install lazylet`.
     });
 
     it('supports the redefinition of', function() {
-      Let({
+      given({
         name1: function() {
           return "James";
         }
       });
 
-      Let({
+      given({
         message: function() {
           return "" + this.name1 + " and " + this.name2;
         }
       });
 
-      Let({
+      given({
         name2: function() {
           return "Kellie";
         }
@@ -127,7 +127,7 @@ Add it to your package.json or `npm install lazylet`.
     it('memoizes variables when they are evaluated', function() {
       var count;
       count = 0;
-      Let({
+      given({
         name: function() {
           count += 1;
           return 'James';
@@ -143,14 +143,14 @@ Add it to your package.json or `npm install lazylet`.
     it('uses memoized variables when variables are defined in terms of others', function() {
       var count;
       count = 0;
-      Let({
+      given({
         val1: function() {
           count += 1;
           return count;
         }
       });
 
-      Let({
+      given({
         val2: function() {
           return this.val1;
         }
@@ -163,7 +163,7 @@ Add it to your package.json or `npm install lazylet`.
     it('uses memoized variables when variables are defined in terms of their previous values', function() {
       var count1, count2;
       count1 = 0;
-      Let({
+      given({
         val1: function() {
           count1 += 1;
           return 1;
@@ -171,7 +171,7 @@ Add it to your package.json or `npm install lazylet`.
       });
 
       count2 = 0;
-      Let({
+      given({
         val1: function() {
           count2 += 1;
           return this.val1 + 1;
@@ -186,7 +186,7 @@ Add it to your package.json or `npm install lazylet`.
     it('forgets the memoization for all variables when any variable is redefined', function() {
       var count;
       count = 0;
-      Let({
+      given({
         name: function() {
           count += 1;
           return 'James';
@@ -195,7 +195,7 @@ Add it to your package.json or `npm install lazylet`.
 
       expect(env.name).to.equal('James');
       expect(count).to.equal(1);
-      Let({
+      given({
         age: function() {
           return 36;
         }
@@ -206,19 +206,19 @@ Add it to your package.json or `npm install lazylet`.
     });
 
     it('exposes all defined properties as enumerable', function() {
-      Let({
+      given({
         name: function() {
           return 'James';
         }
       });
 
-      Let({
+      given({
         age: function() {
           return 36;
         }
       });
 
-      Let({
+      given({
         occupation: function() {
           return 'programmer';
         }
@@ -233,23 +233,23 @@ Add it to your package.json or `npm install lazylet`.
     });
 
     describe('is well-behaved and', function() {
-      it('does not allow redefinition of "Let"', function() {
+      it('does not allow redefinition of "given"', function() {
         expect(function() {
-          Let('Let', 'anything');
+          return given('given', 'anything');
         }).to.throwException(function(e) {
-          expect(e).to.equal('cannot redefine Let');
+          expect(e.message).to.equal('cannot redefine given');
         });
 
       });
 
       it('gives a meaningful error when recursive definitions blow the stack', function() {
-        Let({
+        given({
           a: function() {
             return this.b;
           }
         });
 
-        Let({
+        given({
           b: function() {
             return this.a;
           }
@@ -258,25 +258,25 @@ Add it to your package.json or `npm install lazylet`.
         expect(function() {
           return env.a;
         }).to.throwException(function(e) {
-          expect(e).to.match(/recursive definition of variable '(a|b)' detected/);
+          expect(e.message).to.match(/recursive definition of variable '(a|b)' detected/);
         });
 
       });
 
-      it('prevents the Let environment from being referenced within a builder function', function() {
-        Let({
+      it('prevents the given environment from being referenced within a builder function', function() {
+        given({
           foo: function() {
             return 'foo';
           }
         });
 
-        Let({
+        given({
           viaThis: function() {
             return this.foo;
           }
         });
 
-        Let({
+        given({
           viaEnv: function() {
             return env.foo;
           }
@@ -286,7 +286,7 @@ Add it to your package.json or `npm install lazylet`.
         expect(function() {
           return env.viaEnv;
         }).to.throwException(function(e) {
-          expect(e).to.equal("illegal attempt to access the Let environment in the definition of 'viaEnv'");
+          expect(e.message).to.equal("illegal attempt to access the Given environment in the definition of 'viaEnv'");
         });
 
       });
@@ -299,59 +299,59 @@ Add it to your package.json or `npm install lazylet`.
 
 ```coffee
 
-LazyLet = require '../build/lazylet'
+Given = require '../build/given'
 expect = require 'expect.js'
 
-describe "LazyLet", ->
+describe "Given", ->
 
-  Let = env = undefined
+  given = env = undefined
 
   beforeEach ->
-    env = LazyLet.Env()
-    Let = env.Let
+    env = Given.Env()
+    given = env.given
 
   it "can define a variable", ->
-    Let 'name', 'James Sadler'
+    given 'name', 'James Sadler'
     expect(env.name).to.equal "James Sadler"
 
   it "can define a variable that is depends on another and is computed on demand", ->
-    Let 'name', 'James Sadler'
-    Let 'message', -> "Hello, #{@name}!"
+    given 'name', 'James Sadler'
+    given 'message', -> "Hello, #{@name}!"
     expect(env.message).to.equal 'Hello, James Sadler!'
 
   it 'can define variables in bulk', ->
-    Let
+    given
       name: 'James Sadler'
       age: 36
     expect(env.name).to.equal 'James Sadler'
     expect(env.age).to.equal 36
 
   it 'provides a way to explicitly clear the environment', ->
-    Let 'name', 'James Sadler'
-    Let.clear()
+    given 'name', 'James Sadler'
+    given.clear()
     expect(typeof env.name).to.be 'undefined'
 
   it 'can define variable in terms of the existing value', ->
-    Let 'array', -> [1]
-    Let 'array', -> @array.concat 2
-    Let 'array', -> @array.concat 3
+    given 'array', -> [1]
+    given 'array', -> @array.concat 2
+    given 'array', -> @array.concat 3
     expect(env.array).to.eql [1, 2, 3]
 
   it 'supports the definition of variables that depend on a variable that is not yet defined', ->
-    Let foo: -> @bar
-    Let bar: -> 'Bar'
+    given foo: -> @bar
+    given bar: -> 'Bar'
     expect(env.foo).to.equal 'Bar'
 
   # TODO better decscription please
   it 'supports the redefinition of', ->
-    Let name1: -> "James"
-    Let message: -> "#{@name1} and #{@name2}"
-    Let name2: -> "Kellie"
+    given name1: -> "James"
+    given message: -> "#{@name1} and #{@name2}"
+    given name2: -> "Kellie"
     expect(env.message).to.equal 'James and Kellie'
 
   it 'memoizes variables when they are evaluated', ->
     count = 0
-    Let name: ->
+    given name: ->
       count += 1
       'James'
     env.name
@@ -361,10 +361,10 @@ describe "LazyLet", ->
 
   it 'uses memoized variables when variables are defined in terms of others', ->
     count = 0
-    Let val1: ->
+    given val1: ->
       count += 1
       count
-    Let val2: ->
+    given val2: ->
       @val1
 
     expect(env.val1).to.equal 1
@@ -372,11 +372,11 @@ describe "LazyLet", ->
 
   it 'uses memoized variables when variables are defined in terms of their previous values', ->
     count1 = 0
-    Let val1: ->
+    given val1: ->
       count1 += 1
       1
     count2 = 0
-    Let val1: ->
+    given val1: ->
       count2 += 1
       @val1 + 1
 
@@ -386,19 +386,19 @@ describe "LazyLet", ->
 
   it 'forgets the memoization for all variables when any variable is redefined', ->
     count = 0
-    Let name: ->
+    given name: ->
       count += 1
       'James'
     expect(env.name).to.equal 'James'
     expect(count).to.equal 1
-    Let age: -> 36
+    given age: -> 36
     expect(env.name).to.equal 'James'
     expect(count).to.equal 2
 
   it 'exposes all defined properties as enumerable', ->
-    Let name: -> 'James'
-    Let age: -> 36
-    Let occupation: -> 'programmer'
+    given name: -> 'James'
+    given age: -> 36
+    given occupation: -> 'programmer'
     expect(JSON.parse JSON.stringify env).to.eql
       name: 'James'
       age: 36
@@ -406,23 +406,23 @@ describe "LazyLet", ->
 
   describe 'is well-behaved and', ->
 
-    it 'does not allow redefinition of "Let"', ->
-      expect(-> Let 'Let', 'anything').to.throwException (e) ->
-        expect(e).to.equal 'cannot redefine Let'
+    it 'does not allow redefinition of "given"', ->
+      expect(-> given 'given', 'anything').to.throwException (e) ->
+        expect(e.message).to.equal 'cannot redefine given'
 
     it 'gives a meaningful error when recursive definitions blow the stack', ->
-      Let a: -> @b
-      Let b: -> @a
+      given a: -> @b
+      given b: -> @a
       expect(-> env.a).to.throwException (e) ->
-        expect(e).to.match /recursive definition of variable '(a|b)' detected/
+        expect(e.message).to.match /recursive definition of variable '(a|b)' detected/
 
-    it 'prevents the Let environment from being referenced within a builder function', ->
-      Let foo: -> 'foo'
-      Let viaThis: -> @foo
-      Let viaEnv: -> env.foo
+    it 'prevents the given environment from being referenced within a builder function', ->
+      given foo: -> 'foo'
+      given viaThis: -> @foo
+      given viaEnv: -> env.foo
       expect(env.viaThis).to.eql 'foo'
       expect(-> env.viaEnv).to.throwException (e) ->
-        expect(e).to.equal "illegal attempt to access the Let environment in the definition of 'viaEnv'"
+        expect(e.message).to.equal "illegal attempt to access the Given environment in the definition of 'viaEnv'"
 
 ```
 
@@ -454,7 +454,7 @@ automatically when the source or specs are modified.
 
 ## Contributing
 
-1. Fork it ( https://github.com/freshtonic/lazylet/fork )
+1. Fork it ( https://github.com/freshtonic/given/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
@@ -462,6 +462,6 @@ automatically when the source or specs are modified.
 
 ## Licence
 
-Copyright (c) 2014, lazylet is developed and maintained by James Sadler, and is
+Copyright (c) 2014, given is developed and maintained by James Sadler, and is
 released under the open MIT Licence.
 

@@ -15,7 +15,7 @@ getter = (obj, name, fn) ->
     configurable: true
     enumerable: true
 
-LazyLet =
+Given =
   Env: ->
     privateEnv = {}
     env   = {}
@@ -27,7 +27,7 @@ LazyLet =
       funs = {}
       memos = {}
       privateEnv = {}
-      for name in Object.keys(env) when name isnt 'Let'
+      for name in Object.keys(env) when name isnt 'given'
         delete env[name]
 
     memoize = (name, fn) ->
@@ -74,7 +74,7 @@ LazyLet =
           illegallyAccessedVariable = undefined
 
     defineOneVariable = (name, valueOrFn) ->
-      throw new Error 'cannot redefine Let' if name is 'Let'
+      throw new Error 'cannot redefine given' if name is 'given'
 
       memos = {}
 
@@ -87,7 +87,7 @@ LazyLet =
         getter privateEnv, name, handler
         getter env, name, ->
           if illegallyAccessedVariable?
-            throw new Error "illegal attempt to access the Let environment in the definition of '#{illegallyAccessedVariable}'"
+            throw new Error "illegal attempt to access the Given environment in the definition of '#{illegallyAccessedVariable}'"
           else
             privateEnv[name]
 
@@ -99,7 +99,7 @@ LazyLet =
 
     # The arguments to this function are (name, thing) or (object).
     # The second form is for defining variables in bulk.
-    Let = ->
+    given = ->
       args = [].slice.apply arguments
       if typeof args[0] is 'object'
         defineInBulk args[0]
@@ -107,12 +107,12 @@ LazyLet =
         [name, thing] = args
         defineOneVariable name, thing
 
-    Object.defineProperty env, 'Let',
+    Object.defineProperty env, 'given',
       writable: false
       configurable: false
-      value: Let
+      value: given
 
-    Object.defineProperties Let,
+    Object.defineProperties given,
       clear:
         writable: false
         configurable: false
@@ -121,6 +121,6 @@ LazyLet =
     env
 
 if (typeof module isnt 'undefined') and module.exports?
-  module.exports = LazyLet
+  module.exports = Given
 else
-  @LazyLet = LazyLet
+  @Given = Given
