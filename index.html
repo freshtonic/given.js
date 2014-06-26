@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Given.js - Write super-dry specs using lazily evaluated spec setup</title>
+    <link href='http://fonts.googleapis.com/css?family=Rancho' rel='stylesheet' type='text/css'>
+    <style type='text/css'>
+      html { background: rgb(236, 236, 25); }
+      h1, h2 { 
+        font-family: 'Rancho', cursive;
+        text-align: center;
+      }
+      h1 {
+        font-size: 48pt;
+        text-shadow: 3px 3px 0 #FFF;
+      }
+      h2 {
+        font-size: 28pt;
+        text-shadow: 2px 2px 0 #FFF;
+      }
+      .main {
+        background: black;
+        border-radius: 10px;
+        border-style: dashed;
+        border-color: white;
+        border-width: 3px;
+      }
+      code {
+        font-family: 'Monaco', courrier;
+        font-size: 20px;
+        color: white;
+      }
+      pre {
+        margin: 20px;
+      }
+      .centered { margin: auto; width: 50%; }
+      .code { 
+        overflow: scroll;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="https://github.com/freshtonic/given.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+    <div class='centered'>
+      <h1>Given.js</h1>
+      <h2>Super-DRY specs using lazily evaluated spec setup</h2>
+    </div>
+    <div class='main centered code'>
+      <code>
+        <pre>
+var Given = require('given');
+var expect = require('expect');
+
+describe("A Given example", function() {
+  var given = undefined;
+
+  beforeEach(function() {
+    given = Given(this);
+
+    given('name',     function() { return "Alice"; });
+    given('greeting', function() { return "Hello"; });
+    given('message'   function() {
+      return this.greeting + ' ' + this.name + '!';
+    });
+  }); 
+
+  it("prints the correct message", function() {
+    expect(this.message).toEqual("Hello Alice!");
+  });
+
+  it("can modify the greeting", function() {
+    given('greeting', function() { return 'Yo'; });
+
+    expect(this.message).toEqual("Yo Alice!");
+  });
+});
+        </pre>
+      </code>
+    </div>
+  </body>
+</html>
