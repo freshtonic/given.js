@@ -1,7 +1,7 @@
 {
   "name": "given",
-  "version": "0.9.0",
-  "description": "Lazily evaluated variables for your specs",
+  "version": "1.0.0-beta",
+  "description": "Write super-dry specs with lazily evaluated spec setup!",
   "main": "lib/given.js",
   "directories": {
     "test": "test"
