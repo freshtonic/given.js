@@ -1,6 +1,6 @@
 {
   "name": "given",
-  "version": "1.0.0-beta",
+  "version": "1.0.0-beta2",
   "description": "Write super-dry specs with lazily evaluated spec setup!",
   "main": "lib/given.js",
   "directories": {
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/freshtonic/given.git"
+    "url": "https://github.com/freshtonic/given.js.git"
   },
   "keywords": [ "lazy", "rspec", "jasmine", "mocha", "test", "spec" ],
   "author": "James Sadler <freshtonic@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/freshtonic/given/issues"
+    "url": "https://github.com/freshtonic/given.js/issues"
   },
-  "homepage": "https://github.com/freshtonic/given",
+  "homepage": "https://github.com/freshtonic/given.js",
   "devDependencies": {
     "jasmine-node": "1.14.3",
     "coffee-script": ">=1.7.1",
