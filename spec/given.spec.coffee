@@ -2,7 +2,7 @@
 Given = require '../build/given'
 expect = require 'expect.js'
 
-ddescribe "Given", ->
+describe "Given", ->
 
   given = undefined
 
