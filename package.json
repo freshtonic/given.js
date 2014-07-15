@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/freshtonic/given.js",
   "devDependencies": {
-    "jasmine-node": "1.14.3",
+    "jasmine-node": "1.14.2",
     "coffee-script": ">=1.7.1",
     "expect.js": "~0.3.1"
   }
