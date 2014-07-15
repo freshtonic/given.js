@@ -152,3 +152,10 @@ describe "Given", ->
             definition of 'viaEnv'; Use 'this' within value definitions.
           "
 
+    describe "provides an isGiven function to identify objects created by Given", ->
+      it "returns true for the object returned by Given", ->
+        expect(Given.isGiven(new Given @)).to.be true
+
+      it "returns true for any other object", ->
+        expect(Given.isGiven(new Object())).to.be false
+

@@ -145,8 +145,14 @@ Given = (self) ->
       writable: false
       configurable: false
       value: resetEnv
+    __isGiven__:
+      writable: false
+      configurable: false
+      value: true
 
   given
+
+Given.isGiven = (obj) -> obj?.__isGiven__ or false
 
 if (typeof module isnt 'undefined') and module.exports?
   module.exports = Given
