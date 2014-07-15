@@ -2,7 +2,7 @@
 SRC_COFFEE  = $(shell find src -name \*.coffee)
 TARGET_JS 	= $(subst src/, build/, $(addsuffix .js, $(basename $(SRC_COFFEE))))
 
-SPEC_COFFEE = $(shell find spec/ -name \*.coffee)
+SPEC_COFFEE = $(shell find spec -name \*.coffee)
 SPEC_JS 	= $(subst spec/, build/, $(addsuffix .js, $(basename $(SPEC_COFFEE))))
 
 DIST = lib/given.js
