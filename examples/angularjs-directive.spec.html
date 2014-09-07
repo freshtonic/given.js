@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Example: an Angular.js directive spec</title>
+    <link rel="stylesheet" href="/public/css/prism.css">
+    <link rel="stylesheet" href="/public/css/given.css">
+    <script type='text/javascript' src='/public/js/prism.js'></script>
+    <style>
+      .left-column {
+        width: 65vw;
+      }
+      .right-column {
+        width: 35vw;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='code column left-column'>
+      <pre class='language-javascript'>
+        <code>
+
+// === File: my-message-widget.js
+
+angular.module('my-module').directive('myMessageWidget', function() {
+  return {
+    scope: {
+      message: '='
+    },
+    replace: true,
+    restrict: 'E',
+    template: "&lt;span class='my-message'&gt;{{ message }}&lt;/span&gt;"
+  };
+});
+
+// === File: directive-spec-boilerplate.module.js
+
+// Define a module containing the definition of a Given environment for testing
+// Angular directives.
+angular.module('directive-spec-boilerplate', []).service 'directiveSpec', function($compile, $rootScope) {
+  return function(spec) {
+    var given = Given(spec);
+
+    given({
+
+      // Returns a compiled and linked HTML element.
+      element: function() {
+        var element = angular.element(this.template);
+        $compile(element)(this.scopeObject);
+        scopeObject.$digest();
+        return element;
+      },
+
+      // The Angular scope.
+      scopeObject: function() {
+        var scope = $rootScope.$new();
+        if (this.scope) {
+          _.extend(scope, this.scope);
+        }
+        return scope;
+      },
+
+      // Returns the element's isolated scope.
+      isolateScope: function() {
+        return this.element.isolateScope();
+      },
+
+      // Defines your template. This is just a placeholder. If you forget to
+      // override the definition in your own spec, it will error out with
+      // a helpful message.
+      template: function() {
+        throw new Error 'You must override the "template" definition to define your template'
+      }
+    });
+
+    return given;
+  };
+};
+
+// === File: my-message-widget.spec.js
+
+// Then make use of it in your spec for your directive.
+describe('Directive: myMessageWidget', function() {
+
+  var given = undefined;
+
+  beforeEach(function() {
+    module('my-module');
+    module('directive-spec-boilerplate');
+  });
+
+  beforeEach(inject(function(directiveSpec) {
+
+    // Creates the Given environment, pre-populated with Angular JS directive
+    // spec boilerplate. The 'this' is the 'this' of the spec itself, which
+    // means all variables defined via given are actually properties of the
+    // spec.
+    given = directiveSpec(this);
+
+    given({
+
+      template: function() {
+        return '&lt;my-message-widget message="message"&gt;&lt;/my-message-widget&gt;';
+      },
+
+      scope: function() {
+        return { message: "Hello from James!" };
+      }
+
+    });
+
+  }));
+
+  it('displays the message', function() {
+    // Accessing 'this.element' causes lazy evaluation of the element as defined
+    // in the boilerplate helper.
+    expect(this.element.find(".my-message")).toHaveText('Hello from James!');
+  });
+
+});
+        </code>
+      </pre>
+    </div>
+    <div class='main column right-column'>
+      <h1>Example: an Angular.js directive spec</h1>
+      <a class='button' href="/examples/angularjs-directive.spec.js"
+        download="angular-directive-spec-with-given.js">Download example</a>
+      <p>
+      <p>
+      Using an given environment made specifically for testing Angular.js directives means lesss boilerplate in your specs.  In this example all that the spec must define is a template and any necessary scope variables required by the directive, yet the boilerplate derives <code>scopeObject</code>, <code>element</code> and <code>isolateScope</code> for you.
+      </p>
+      <p>
+        You can download the code and use the directive spec boilerplate in your own Angular projects!
+      </p>
+    </div>
+  </body>
+</html>

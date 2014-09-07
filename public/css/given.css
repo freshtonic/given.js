@@ -1,0 +1,52 @@
+
+body, html {
+  height: 100vh;
+}
+
+body {
+  margin: 0;
+}
+
+.column {
+  overflow: scroll;
+  width: 50vw;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.left-column {
+  float: left;
+}
+
+.right-column {
+  float: right;
+}
+
+.left-column pre.language-javascript {
+  margin: 0;
+  border-radius: 0;
+  height: 100vh;
+}
+
+pre.language-javascript.small {
+  padding: 0;
+  padding-left: 10px;
+}
+
+pre.language-javascript.small * {
+  font-size: 8pt;
+}
+
+.main {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+a.button {
+  color: white;
+  background-color: rgb(92, 92, 143);
+  text-decoration: none;
+  padding: 2px 6px 2px 6px;
+  border: 2px solid black;
+  border-radius: 5px;
+}
