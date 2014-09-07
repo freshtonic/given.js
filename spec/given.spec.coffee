@@ -10,23 +10,23 @@ describe "Given", ->
     given = Given @
 
   it "can define a variable", ->
-    given 'name', 'James Sadler'
+    given 'name', -> 'James Sadler'
     expect(@name).to.equal "James Sadler"
 
   it "can define a variable that is depends on another and is computed on demand", ->
-    given 'name', 'James Sadler'
+    given 'name', -> 'James Sadler'
     given 'message', -> "Hello, #{@name}!"
     expect(@message).to.equal 'Hello, James Sadler!'
 
   it 'can define variables in bulk', ->
     given
-      name: 'James Sadler'
-      age: 36
+      name: -> 'James Sadler'
+      age: -> 36
     expect(@name).to.equal 'James Sadler'
     expect(@age).to.equal 36
 
   it 'provides a way to explicitly clear the environment', ->
-    given 'name', 'James Sadler'
+    given 'name', -> 'James Sadler'
     given.clear()
     expect(@name).to.be undefined
 
@@ -106,6 +106,10 @@ describe "Given", ->
       occupation: 'programmer'
 
   describe 'is well-behaved and', ->
+
+    it 'gives a meaningful error message when the RHS is not a function', ->
+      expect(-> given foo: 'bar').to.throwException (e) ->
+        expect(e.message).to.equal 'definition of "foo" is not a function'
 
     it 'does not allow redefinition of "given"', ->
       expect(-> given 'given', 'anything').to.throwException (e) ->

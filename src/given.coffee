@@ -2,13 +2,6 @@
 # Function.prototype.bind is absent in PhantomJS.
 bind = (fn, self) -> -> fn.apply self, arguments
 
-# Wrap a value in a function if it is not already a function.
-asFn = (valueOrFn) ->
-  if typeof valueOrFn is 'function'
-    valueOrFn
-  else
-    -> valueOrFn
-
 defineGetter = (obj, name, fn) ->
   Object.defineProperty obj, name,
     get: fn
@@ -109,13 +102,12 @@ Given = (self) ->
   isRedefinitionOf = (name) -> funs[name]?
 
   # Defines one variable in the Given environment.
-  defineOneVariable = (name, definition) ->
+  defineOneVariable = (name, definitionFn) ->
     throw new Error 'cannot redefine given' if name is 'given'
+    throw new Error "definition of \"#{name}\" is not a function" unless definitionFn instanceof Function
 
     # Clear all memoized values.
     memos = {}
-
-    definitionFn = asFn definition
 
     if isRedefinitionOf name
       definitionFn = redefine name, definitionFn
