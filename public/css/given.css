@@ -1,34 +1,34 @@
 
-body, html {
-}
-
-body {
-  margin: 0;
-  font-size: 0;
-}
-
-.column {
-  width: 50%;
-  height: 50%;
+* {
   box-sizing: border-box;
-  vertical-align: top;
-  font-size: 16px;
-  display: inline-block;
 }
 
-.left-column pre.language-javascript {
+body, html {
+  font-size: 0;
   margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.container {
+  font-size: 16px;
+  display: flex;
+  -webkit-display: flex;
+  display: -webkit-box;
+}
+
+.left-column {
+  width: 50%;
+  background: #272822;
+}
+
+.right-column {
+  width: 50%;
+}
+
+pre.language-javascript {
+  margin-top: 0;
   border-radius: 0;
-  height: 100vh;
-}
-
-pre.language-javascript.small {
-  padding: 0;
-  padding-left: 10px;
-}
-
-pre.language-javascript.small * {
-  font-size: 8pt;
 }
 
 .main {

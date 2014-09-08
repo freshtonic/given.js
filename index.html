@@ -8,79 +8,85 @@
   </head>
   <body>
     <a href="https://github.com/freshtonic/given.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
-    <div class='code column left-column'>
-      <pre class='language-javascript'>
-        <code>
-var Given = require('given');
-var expect = require('expect');
+  <div class='container'><div class='code column left-column'><pre class='language-javascript'>
+          <code>
+  var Given = require('given');
+  var expect = require('expect');
 
-describe("A Given example", function() {
-  var given = undefined;
+  describe("A Given example", function() {
+    var given = undefined;
 
-  beforeEach(function() {
-    given = Given(this);
-    given({
-      name:     function() { return "Alice"; }),
-      greeting: function() { return "Hello"; }),
-      message:  function() {
-        return this.greeting + ' ' + this.name + '!';
+    beforeEach(function() {
+      given = Given(this);
+      given({
+        name:     function() { return "Alice"; }),
+        greeting: function() { return "Hello"; }),
+        message:  function() {
+          return this.greeting + ' ' + this.name + '!';
+        });
       });
+    }); 
+
+    it("prints the correct message", function() {
+      expect(this.message).toEqual("Hello Alice!");
     });
-  }); 
 
-  it("prints the correct message", function() {
-    expect(this.message).toEqual("Hello Alice!");
-  });
+    it("can redefine the greeting", function() {
+      given('greeting', function() { return 'Yo'; });
+      expect(this.message).toEqual("Yo Alice!");
+    });
 
-  it("can redefine the greeting", function() {
-    given('greeting', function() { return 'Yo'; });
-    expect(this.message).toEqual("Yo Alice!");
+    it("can redefine the name to be capitalized", function() {
+      given('name', function() { return this.name.toUpperCase()'; });
+      expect(this.message).toEqual("Yo ALICE!");
+    });
   });
-
-  it("can redefine the name to be capitalized", function() {
-    given('name', function() { return this.name.toUpperCase()'; });
-    expect(this.message).toEqual("Yo ALICE!");
-  });
-});
-        </code>
-      </pre>
-    </div>
-    <div class='main column right-column'>
-      <h1>Given.js</h1>
-      <h2>Write DRY specs with lazy setup code</h2>
-      <a class='button' href="https://raw.githubusercontent.com/freshtonic/given.js/1.0.0/lib/given.js"
-        download="given.js">Download v1.0.0!</a>
-      <p>Given.js: </p>
-      <ul>
-        <li><b>Is inspired by RSpec's <em><a href='https://www.relishapp.com/rspec/rspec-core/v/2-6/docs/helper-methods/let-and-let'>let</a></em> helper method</b>
-        </li>
-        <li><b>Keeps your spec setup code DRY</b>
-          <p>Examples:
-            <ul>
-              <li>Testing an <a href='examples/angularjs-directive.spec.html'>Angular.js directive</a></li>
-            </ul>
-          </p>
-        </li>
-        <li>
-          <b>Can improve the performance of your tests</b>
-          <p>
-            Variables defined using <em>Given.js</em> only spring into existence when referenced, so variables that are not used in every test do not incur a setup cost. This is contrary to a test suite where an entire fixture is constructed in a <em>beforeEach</em> function.
-          </p>
-        </li>
-        <li><b>Is test framework agnostic</b>
-        <p>Given.js will work with <a href='http://visionmedia.github.io/mocha/'>Mocha</a>, <a href="http://jasmine.github.io/">Jasmine</a>, <a href="http://sinonjs.org/">Sinon</a> and just about any other test framework you can think of. If it doesn't, it's a bug.</p></li>
-        <li><b>Is comprehensivley tested</b>
-        <p>Given.js itself is written and maintained in a TDD-style and should be considered of a sufficient quality for production use.</p></li>
-        <li><b>Produces helpful error messages when things go wrong</b>
-        <p>Given.js traps specific errors, for example, cyclic variable definitions and give you a meaningful error message rather than a raw  stack overflow error.</p>
-        <pre class='language-javascript small'><code>
-given('foo', function() { return "I am " + this.bar; }); 
-given('bar', function() { return "I am " + this.foo; }); 
-this.bar // =&gt; "recursive definition of variable 'bar' detected"</code>
+          </code>
         </pre>
+      </div><div class='main column right-column'>
+        <h1>Given.js</h1>
+        <h2>Write DRY specs with lazy setup code</h2>
+        <p>
+          <a class='button' href="https://raw.githubusercontent.com/freshtonic/given.js/1.0.0/lib/given.js" download="given.js">Download v1.0.0!</a>
+        </p>
+        <p>Given.js: </p>
+        <ul>
+          <li><b>Is inspired by RSpec's <em><a href='https://www.relishapp.com/rspec/rspec-core/v/2-6/docs/helper-methods/let-and-let'>let</a></em> helper method</b>
+          </li>
+          <li><b>Keeps your spec setup code DRY</b>
+            <p>Examples:
+              <ul>
+                <li>Testing an <a href='examples/angularjs-directive.spec.html'>Angular.js directive</a></li>
+              </ul>
+            </p>
+          </li>
+          <li>
+            <b>Can improve the performance of your tests</b>
+            <p>
+              Variables defined using <em>Given.js</em> only spring into existence when referenced, so variables that are not used in every test do not incur a setup cost. This is contrary to a test suite where an entire fixture is constructed in a <em>beforeEach</em> function.
+            </p>
+          </li>
+          <li><b>Is test framework agnostic</b>
+          <p>Given.js will work with <a href='http://visionmedia.github.io/mocha/'>Mocha</a>, <a href="http://jasmine.github.io/">Jasmine</a>, <a href="http://sinonjs.org/">Sinon</a> and just about any other test framework you can think of. If it doesn't, it's a bug.</p></li>
+          <li><b>Is comprehensivley tested</b>
+          <p>Given.js itself is written and maintained in a TDD-style and should be considered of a sufficient quality for production use.</p></li>
+          <li><b>Produces helpful error messages when things go wrong</b>
+          <p>Given.js traps specific errors, for example, cyclic variable definitions and give you a meaningful error message rather than a raw  stack overflow error.</p>
+          <pre class='language-javascript small'><code>
+  given('foo', function() { return "I am " + this.bar; }); 
+  given('bar', function() { return "I am " + this.foo; }); 
+  this.bar // =&gt; "recursive definition of variable 'bar' detected"</code>
+          </pre>
+          </li>
+          <li><b>Installation:</b>
+        <p>
+        Given.js can also be installed using <b>bower</b> (a package manager for frontend components, see bower.io for more details):
+          <pre><code>$ bower install given</code></pre> or by using <b>npm</b>
+  <pre><code>$ npm install given</code></pre>
+        </p>
         </li>
-
-      </ul>
+        </ul>
+      </div>
     </div>
   </body>
 </html>
