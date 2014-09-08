@@ -1,25 +1,19 @@
 
 body, html {
-  height: 100vh;
 }
 
 body {
   margin: 0;
+  font-size: 0;
 }
 
 .column {
-  overflow: scroll;
-  width: 50vw;
-  height: 100vh;
+  width: 50%;
+  height: 50%;
   box-sizing: border-box;
-}
-
-.left-column {
-  float: left;
-}
-
-.right-column {
-  float: right;
+  vertical-align: top;
+  font-size: 16px;
+  display: inline-block;
 }
 
 .left-column pre.language-javascript {
