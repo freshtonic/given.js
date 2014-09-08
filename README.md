@@ -1,6 +1,6 @@
 
 [![Build
-Status](https://api.travis-ci.org/repositories/freshtonic/given.svg?branch=master)](https://travis-ci.org/freshtonic/given.js)
+Status](https://api.travis-ci.org/repositories/freshtonic/given.js.svg?branch=master)](https://travis-ci.org/freshtonic/given.js)
 
 # Given
 
