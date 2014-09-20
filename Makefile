@@ -36,7 +36,8 @@ spec: $(DIST) $(SPEC_JS)
 clean:
 	@rm -fr build/* README.md
 
-watch: spec compile
+watch:
+	-@make spec
 	@wach -o src/*.coffee,spec/*.coffee, make compile spec
 
 all: compile spec README.md 
