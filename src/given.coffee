@@ -27,15 +27,6 @@ Given = (self) ->
     else
       privateEnv[name]
 
-  # The composition of a pipeline of handlers for computing the value of
-  # a variable in the Given environment.  Written in a style that linearizes the
-  # stages in the order they are executed.
-  handler = (definitionFn, name) ->
-    f1 = bind definitionFn, privateEnv
-    f2 = trapStackOverflow name
-    f3 = trapOuterEnvAccess name
-    f4 = memoize name
-    -> f4 -> f3 -> f2 -> f1()
 
   # Empties the environment and associated internal bookkeeping. *env* is
   # handled specially: it may be the 'this' of the test under execution so
@@ -99,6 +90,16 @@ Given = (self) ->
     defineGetter privateEnv, name, newFn
     newFn
 
+  # The composition of a pipeline of handlers for computing the value of
+  # a variable in the Given environment.  Written in a style that linearizes the
+  # stages in the order they are executed.
+  define = (definitionFn, name) ->
+    f1 = bind definitionFn, privateEnv
+    f2 = trapStackOverflow name
+    f3 = trapOuterEnvAccess name
+    f4 = memoize name
+    -> f4 -> f3 -> f2 -> f1()
+
   isRedefinitionOf = (name) -> funs[name]?
 
   # Defines one variable in the Given environment.
@@ -112,7 +113,7 @@ Given = (self) ->
     if isRedefinitionOf name
       definitionFn = redefine name, definitionFn
     else
-      defineGetter privateEnv, name, handler(definitionFn, name)
+      defineGetter privateEnv, name, define(definitionFn, name)
       defineGetter env, name, failOnReenter(name)
 
     funs[name] = definitionFn
