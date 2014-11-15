@@ -13,6 +13,7 @@ Given = (self) ->
   env                  = self or {}
   funs                 = {}
   memos                = {}
+  definitionCount      = 0
 
   topmostVariableBeingEvaluated = undefined
   entered                       = -> topmostVariableBeingEvaluated?
@@ -37,15 +38,17 @@ Given = (self) ->
     funs = {}
     memos = {}
     privateEnv = {}
+    definitionCount = 0
 
   # Compute the value of the variable identified by *name*, returning a cached
   # value if it is already computed.
-  memoize = (name) -> (fn) ->
-    memo = memos[name]
-    if memo?
-      memo
-    else
-      memos[name] = fn()
+  memoize = (key) ->
+    (fn) ->
+      memo = memos[key]
+      if memo?
+        memo
+      else
+        memos[key] = fn()
 
   # Detect whether an error is a stack overflow. This way these errors are
   # thrown is inconsistent across JavaScript implenentations so this function
@@ -94,10 +97,11 @@ Given = (self) ->
   # a variable in the Given environment.  Written in a style that linearizes the
   # stages in the order they are executed.
   define = (env, definitionFn, name) ->
+    definitionCount += 1
     f1 = bind definitionFn, env
     f2 = trapStackOverflow name
     f3 = trapOuterEnvAccess name
-    f4 = memoize name
+    f4 = memoize "#{name}_#{definitionCount}"
     -> f4 -> f3 -> f2 -> f1()
 
   isFirstDefinitionOf = (name) -> not funs[name]?
@@ -111,14 +115,11 @@ Given = (self) ->
     memos = {}
 
     if isFirstDefinitionOf name
-      console.log "first definition of #{name}"
-      defineGetter privateEnv, name, define(privateEnv, definitionFn, name)
+      funs[name] = define(privateEnv, definitionFn, name)
+      defineGetter privateEnv, name, funs[name]
       defineGetter env, name, failOnReenter(name)
     else
-      console.log "redefinition of #{name}"
-      definitionFn = redefine name, definitionFn
-
-    funs[name] = definitionFn
+      funs[name] = redefine name, definitionFn
 
   # Defines values in bulk.
   defineInBulk = (definitions) ->

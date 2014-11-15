@@ -2,7 +2,7 @@
 Given = require '../build/given'
 expect = require 'expect.js'
 
-ddescribe "Given", ->
+describe "Given", ->
 
   given = undefined
 
@@ -112,13 +112,10 @@ ddescribe "Given", ->
       it 'should not recompute the variable each time it is accessed in the new definition', ->
 
         given a: ->
-          console.log 'EVAL a'
           { name: 'James' }
         given a: ->
           @a.name = 'foo'
           @a
-
-        console.log 'FOO'
 
         expect(@a.name).to.equal 'foo'
 
