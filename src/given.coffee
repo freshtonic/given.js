@@ -100,7 +100,7 @@ Given = (self) ->
     f4 = memoize name
     -> f4 -> f3 -> f2 -> f1()
 
-  isRedefinitionOf = (name) -> funs[name]?
+  isFirstDefinitionOf = (name) -> not funs[name]?
 
   # Defines one variable in the Given environment.
   defineOneVariable = (name, definitionFn) ->
@@ -110,11 +110,11 @@ Given = (self) ->
     # Clear all memoized values.
     memos = {}
 
-    if isRedefinitionOf name
-      definitionFn = redefine name, definitionFn
-    else
+    if isFirstDefinitionOf name
       defineGetter privateEnv, name, define(privateEnv, definitionFn, name)
       defineGetter env, name, failOnReenter(name)
+    else
+      definitionFn = redefine name, definitionFn
 
     funs[name] = definitionFn
 
