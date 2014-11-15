@@ -2,7 +2,7 @@
 Given = require '../build/given'
 expect = require 'expect.js'
 
-describe "Given", ->
+ddescribe "Given", ->
 
   given = undefined
 
@@ -104,6 +104,51 @@ describe "Given", ->
       name: 'James'
       age: 36
       occupation: 'programmer'
+
+  describe 'an edge case', ->
+
+    describe 'when redefining a variable', ->
+
+      it 'should not recompute the variable each time it is accessed in the new definition', ->
+
+        given a: ->
+          console.log 'EVAL a'
+          { name: 'James' }
+        given a: ->
+          @a.name = 'foo'
+          @a
+
+        console.log 'FOO'
+
+        expect(@a.name).to.equal 'foo'
+
+  describe 'creating a function that caches computation of one specific instance variable', ->
+    bind = (fn, self) -> -> fn.apply self, arguments
+
+    it 'lskfjlsf', ->
+
+      env = {}
+      Object.defineProperty env, 'a',
+        get: -> { name: 'bar' }
+
+
+      makeCachingEnv = (env, name) ->
+        cachingEnv = {}
+        cache = undefined
+        Object.defineProperty cachingEnv, name,
+          get: ->
+            if cache?
+              cache
+            else
+              cache = env[name]
+
+      f = ->
+        @a.name = 'foo'
+        @a
+
+      boundFn = bind f, makeCachingEnv(env, 'a')
+
+      expect(boundFn().name).to.equal 'foo'
 
   describe 'is well-behaved and', ->
 
