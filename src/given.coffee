@@ -86,15 +86,15 @@ Given = (self) ->
     newEnv       = Object.create privateEnv
     oldFn        = funs[name]
     defineGetter newEnv, name, bind(oldFn, privateEnv)
-    newFn        = bind fn, newEnv
+    newFn        = define newEnv, fn, name
     defineGetter privateEnv, name, newFn
     newFn
 
   # The composition of a pipeline of handlers for computing the value of
   # a variable in the Given environment.  Written in a style that linearizes the
   # stages in the order they are executed.
-  define = (definitionFn, name) ->
-    f1 = bind definitionFn, privateEnv
+  define = (env, definitionFn, name) ->
+    f1 = bind definitionFn, env
     f2 = trapStackOverflow name
     f3 = trapOuterEnvAccess name
     f4 = memoize name
@@ -113,7 +113,7 @@ Given = (self) ->
     if isRedefinitionOf name
       definitionFn = redefine name, definitionFn
     else
-      defineGetter privateEnv, name, define(definitionFn, name)
+      defineGetter privateEnv, name, define(privateEnv, definitionFn, name)
       defineGetter env, name, failOnReenter(name)
 
     funs[name] = definitionFn
