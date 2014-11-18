@@ -2,9 +2,14 @@
 
 http://www.jscheck.org/
 https://github.com/mcandre/node-quickcheck/blob/master/quickcheck.js
-
-
 https://coderwall.com/p/wj7rug
 
 
-- report errors with source maps
+- try to do away with the dichotomy of define/redefine
+- fix memoization of handlers for redefinitions
+- quickcheck
+
+
+- removing the ability for a redefined variable to see it's previous value via
+  prototypical inheritance would simplify things somewhat.
+

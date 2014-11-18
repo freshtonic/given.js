@@ -2,12 +2,14 @@
 # Function.prototype.bind is absent in PhantomJS.
 bind = (fn, self) -> -> fn.apply self, arguments
 
+# Helper function for defining a computed property on an object
 defineGetter = (obj, name, fn) ->
   Object.defineProperty obj, name,
     get: fn
     configurable: true
     enumerable: true
 
+# Make a new Given environment.
 Given = (self) ->
   privateEnv           = {}
   env                  = self or {}
@@ -145,6 +147,10 @@ Given = (self) ->
       writable: false
       configurable: false
       value: true
+    _env_:
+      writable: false
+      configurable: false
+      value: env
 
   given
 

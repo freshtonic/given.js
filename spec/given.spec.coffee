@@ -13,7 +13,7 @@ describe "Given", ->
     given 'name', -> 'James Sadler'
     expect(@name).to.equal "James Sadler"
 
-  it "can define a variable that is depends on another and is computed on demand", ->
+  it "can define a variable that is defined in terms of another", ->
     given 'name', -> 'James Sadler'
     given 'message', -> "Hello, #{@name}!"
     expect(@message).to.equal 'Hello, James Sadler!'
