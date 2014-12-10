@@ -1,6 +1,6 @@
 {
   "name": "given",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Write super-dry specs with lazily evaluated spec setup!",
   "main": "lib/given.js",
   "directories": {
