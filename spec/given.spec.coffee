@@ -182,7 +182,7 @@ describe "Given", ->
             definition of 'viaEnv'; Use 'this' within value definitions.
           "
 
-      it 'wnen the environment is *this*', ->
+      it 'when the environment is *this*', ->
         given = Given @
 
         given foo:      -> 'foo'

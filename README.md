@@ -302,7 +302,7 @@ Add it to your package.json or `npm install given`.
 
         });
 
-        it('wnen the environment is *this*', function() {
+        it('when the environment is *this*', function() {
           given = Given(this);
           given({
             foo: function() {
@@ -486,7 +486,7 @@ ddescribe "Given", ->
             definition of 'viaEnv'; Use 'this' within value definitions.
           "
 
-      it 'wnen the environment is *this*', ->
+      it 'when the environment is *this*', ->
         given = Given @
 
         given foo:      -> 'foo'
