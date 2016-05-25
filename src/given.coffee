@@ -109,7 +109,7 @@ Given = (self) ->
   # Defines one variable in the Given environment.
   defineOneVariable = (name, definitionFn) ->
     throw new Error 'cannot redefine given' if name is 'given'
-    throw new Error "definition of \"#{name}\" is not a function" unless definitionFn instanceof Function
+    throw new Error "definition of \"#{name}\" is not a function - did you mean to call `.raw`?" unless definitionFn instanceof Function
 
     # Clear all memoized values.
     memos = {}
@@ -136,7 +136,21 @@ Given = (self) ->
       [name, thing] = args
       defineOneVariable name, thing
 
+  returnRaw = (value) -> -> value
+
+  defineRaw = ->
+    args = [].slice.apply arguments
+    if arguments.length == 1
+      returnRaw arguments[0]
+    else
+      [name, thing] = args
+      defineOneVariable name, returnRaw(thing)
+
   Object.defineProperties given,
+    raw:
+      writable: false
+      configurable: false
+      value: defineRaw
     clear:
       writable: false
       configurable: false

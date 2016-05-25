@@ -25,6 +25,18 @@ describe "Given", ->
     expect(@name).to.equal 'James Sadler'
     expect(@age).to.equal 36
 
+  it 'can define a raw variable', ->
+    given.raw 'name', 'James Sadler'
+    expect(@name).to.equal 'James Sadler'
+
+  it 'can define both raw and lazy variables in bulk', ->
+    given
+      name: given.raw('James Sadler')
+      age: -> 36
+
+    expect(@name).to.equal 'James Sadler'
+    expect(@age).to.equal 36
+
   it 'provides a way to explicitly clear the environment', ->
     given 'name', -> 'James Sadler'
     given.clear()
@@ -151,7 +163,7 @@ describe "Given", ->
 
     it 'gives a meaningful error message when the RHS is not a function', ->
       expect(-> given foo: 'bar').to.throwException (e) ->
-        expect(e.message).to.equal 'definition of "foo" is not a function'
+        expect(e.message).to.equal 'definition of "foo" is not a function - did you mean to call `.raw`?'
 
     it 'does not allow redefinition of "given"', ->
       expect(-> given 'given', 'anything').to.throwException (e) ->
