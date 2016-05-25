@@ -32,22 +32,6 @@ _USAGE_EXAMPLE_JS_
 
 _USAGE_EXAMPLE_COFFEE_
 
-## Caveats
-
-To set a variable with a value that *is* a function, nest it within
-another function (to avoid ambiguity with dynamically computing a value), like so:
-
-```javascript
-
-env.Let('aFunction', function() {
-    // This function will be the variable's value.
-    return function() {
-        return 'foo';
-    };
-});
-
-```
-
 ## Running the specs
 
 Run `make spec`.

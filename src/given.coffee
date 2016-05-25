@@ -98,7 +98,7 @@ Given = (self) ->
   # stages in the order they are executed.
   define = (env, definitionFn, name) ->
     definitionCount += 1
-    f1 = bind definitionFn, env
+    f1 = -> definitionFn.call(null, env)
     f2 = trapStackOverflow name
     f3 = trapOuterEnvAccess name
     f4 = memoize "#{name}_#{definitionCount}"

@@ -15,7 +15,7 @@ describe "Given", ->
 
   it "can define a variable that is depends on another and is computed on demand", ->
     given 'name', -> 'James Sadler'
-    given 'message', -> "Hello, #{@name}!"
+    given 'message', (env) -> "Hello, #{env.name}!"
     expect(@message).to.equal 'Hello, James Sadler!'
 
   it 'can define variables in bulk', ->
@@ -44,18 +44,18 @@ describe "Given", ->
 
   it 'can define variable in terms of the existing value', ->
     given 'array', -> [1]
-    given 'array', -> @array.concat 2
-    given 'array', -> @array.concat 3
+    given 'array', (env) -> env.array.concat 2
+    given 'array', (env) -> env.array.concat 3
     expect(@array).to.eql [1, 2, 3]
 
   it 'supports the definition of variables that depend on a variable that is not yet defined', ->
-    given foo: -> @bar
+    given foo: (env) -> env.bar
     given bar: -> 'Bar'
     expect(@foo).to.equal 'Bar'
 
   it 'supports forward definitions', ->
     given name1: -> "James"
-    given message: -> "#{@name1} and #{@name2}"
+    given message: (env) -> "#{env.name1} and #{env.name2}"
     given name2: -> "Kellie"
     expect(@message).to.equal 'James and Kellie'
 
@@ -74,8 +74,8 @@ describe "Given", ->
     given val1: ->
       count += 1
       count
-    given val2: ->
-      @val1
+    given val2: (env) ->
+      env.val1
 
     expect(@val1).to.equal 1
     expect(@val2).to.equal 1
@@ -86,9 +86,9 @@ describe "Given", ->
       count1 += 1
       1
     count2 = 0
-    given val1: ->
+    given val1: (env) ->
       count2 += 1
-      @val1 + 1
+      env.val1 + 1
 
     expect(@val1).to.equal 2
     expect(count1).to.equal 1
@@ -125,9 +125,9 @@ describe "Given", ->
 
         given a: ->
           { name: 'James' }
-        given a: ->
-          @a.name = 'foo'
-          @a
+        given a: (env) ->
+          env.a.name = 'foo'
+          env.a
 
         expect(@a.name).to.equal 'foo'
 
@@ -170,8 +170,8 @@ describe "Given", ->
         expect(e.message).to.equal 'cannot redefine given'
 
     it 'gives a meaningful error when recursive definitions blow the stack', ->
-      given a: -> @b
-      given b: -> @a
+      given a: (env) -> env.b
+      given b: (env) -> env.a
       expect(=> @a).to.throwException (e) ->
         expect(e.message).to.match /recursive definition of variable '(a|b)' detected/
 
